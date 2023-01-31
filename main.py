@@ -39,11 +39,11 @@ def predict_rub_salary_sj(super_vac):
 
 
 def get_sj_salaries_by_lang(secret_key):
-    count_vacancies = {}
+    vacancies_statistic = {}
     for lang in LANGUAGES:
         vacancies = []
-        vac_found = 0
-        vac_processed = 0
+        vacancies_found = 0
+        vacancies_processed = 0
         total_salary = 0
         for page in count(0):
             url = 'https://api.superjob.ru/2.0/vacancies/'
@@ -57,7 +57,7 @@ def get_sj_salaries_by_lang(secret_key):
             page_response.raise_for_status()
 
             page_payload = page_response.json()
-            vac_found = page_payload['total']
+            vacancies_found = page_payload['total']
             vacancies += page_payload['objects']
             time.sleep(0.25)
             if not page_payload['more']:
@@ -66,24 +66,24 @@ def get_sj_salaries_by_lang(secret_key):
         for vacancy in vacancies:
             if predict_rub_salary_sj(vacancy):
                 total_salary += predict_rub_salary_sj(vacancy)
-                vac_processed += 1
-        if vac_processed != 0:
-            av_salary = total_salary // vac_processed
+                vacancies_processed += 1
+        if vacancies_processed != 0:
+            average_salary = total_salary // vacancies_processed
         else:
-            av_salary = 0
-        count_vacancies[lang] = {
-            "vacancies_found": vac_found,
-            "vacancies_processed": int(vac_processed),
-            "average_salary": int(av_salary)
+            average_salary = 0
+        vacancies_statistic[lang] = {
+            "vacancies_found": vacancies_found,
+            "vacancies_processed": int(vacancies_processed),
+            "average_salary": int(average_salary)
         }
-    return count_vacancies
+    return vacancies_statistic
 
 
 def get_hh_salaries_by_lang():
-    count_vacancies = {}
+    vacancies_statistic = {}
     for lang in LANGUAGES:
         vacancies = []
-        vac_found = 0
+        vacancies_found = 0
         for page in count(0):
             params = {
                 'text': f'NAME:Программист {lang}',
@@ -95,27 +95,27 @@ def get_hh_salaries_by_lang():
             page_response.raise_for_status()
 
             page_payload = page_response.json()
-            vac_found = page_payload['found']
+            vacancies_found = page_payload['found']
             if page >= page_payload['pages']:
                 break
 
             vacancies += page_payload['items']
             time.sleep(0.25)
 
-        if vac_found > 100:
-            vac_processed = 0
+        if vacancies_found > 100:
+            vacancies_processed = 0
             total_salary = 0
             for vacancy in vacancies:
                 if predict_rub_salary_hh(vacancy) is not None:
-                    vac_processed += 1
+                    vacancies_processed += 1
                     total_salary += predict_rub_salary_hh(vacancy)
-            av_salary = total_salary // vac_processed
-            count_vacancies[lang] = {
-                "vacancies_found": vac_found,
-                "vacancies_processed": int(vac_processed),
-                "average_salary": int(av_salary)
+            average_salary = total_salary // vacancies_processed
+            vacancies_statistic[lang] = {
+                "vacancies_found": vacancies_found,
+                "vacancies_processed": int(vacancies_processed),
+                "average_salary": int(average_salary)
             }
-    return count_vacancies
+    return vacancies_statistic
 
 
 def draw_table(vacancies_statistics, header):
