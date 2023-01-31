@@ -140,11 +140,11 @@ def draw_table(vacancies_statistics, header):
             ]
         )
     table = AsciiTable(salary_statistics, header)
-    print(table.table)
+    return table.table
 
 
 if __name__ == '__main__':
     load_dotenv()
     sj_secret_key = os.environ.get('SJ_SECRET_KEY')
-    draw_table(hh_salaries_by_lang(), 'HeadHunter Moscow')
-    draw_table(sj_salaries_by_lang(sj_secret_key), 'SuperJob Moscow')
+    print(draw_table(hh_salaries_by_lang(), 'HeadHunter Moscow'))
+    print(draw_table(sj_salaries_by_lang(sj_secret_key), 'SuperJob Moscow'))
