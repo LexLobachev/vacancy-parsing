@@ -9,35 +9,33 @@ import os
 LANGUAGES = ['JavaScript', 'Java', 'Python', 'Ruby', 'PHP', 'C++', 'Go', 'C#', 'C']
 
 
-def predict_rub_salary_hh(vac):
+def salary_by_condition(salary_currency, salary_from, salary_to):
     average_salary = None
-    if vac['salary'] is None:
+    if salary_currency != 'RUR' or salary_currency != 'rub':
         return average_salary
-    elif vac['salary']['currency'] != 'RUR':
+    elif (salary_from is None or salary_from == 0) and (salary_to is None and salary_to == 0):
         return average_salary
-    elif vac['salary']['from'] is None:
-        average_salary = vac['salary']['to'] * 0.8
-    elif vac['salary']['to'] is None:
-        average_salary = vac['salary']['from'] * 1.2
+    elif salary_from is None or salary_from == 0:
+        average_salary = salary_to * 0.8
+    elif salary_to is None or salary_to == 0:
+        average_salary = salary_from * 1.2
     else:
-        average_salary = (vac['salary']['to'] - vac['salary']['from'])//2.0
+        average_salary = (salary_to - salary_from)//2.0
     return average_salary
+
+
+def predict_rub_salary_hh(vac):
+    hh_salary_currency = vac['salary']['currency']
+    hh_salary_from = vac['salary']['from']
+    hh_salary_to = vac['salary']['to']
+    return salary_by_condition(hh_salary_currency, hh_salary_from, hh_salary_to)
 
 
 def predict_rub_salary_sj(super_vac):
-    average_salary = None
-    if super_vac['currency'] != 'rub':
-        return average_salary
-    elif (super_vac['payment_from'] is None or super_vac['payment_from'] == 0) and (
-            super_vac['payment_to'] is None or super_vac['payment_to'] == 0):
-        return average_salary
-    elif super_vac['payment_from'] is None or super_vac['payment_from'] == 0:
-        average_salary = super_vac['payment_to'] * 0.8
-    elif super_vac['payment_to'] is None or super_vac['payment_to'] == 0:
-        average_salary = super_vac['payment_from'] * 1.2
-    else:
-        average_salary = (super_vac['payment_to'] - super_vac['payment_from']) // 2.0
-    return average_salary
+    sj_salary_currency = super_vac['currency']
+    sj_salary_from = super_vac['payment_from']
+    sj_salary_to = super_vac['payment_to']
+    return salary_by_condition(sj_salary_currency, sj_salary_from, sj_salary_to)
 
 
 def sj_salaries_by_lang(secret_key):
