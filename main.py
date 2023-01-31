@@ -6,7 +6,7 @@ import time
 import requests
 import os
 
-languages = ['JavaScript', 'Java', 'Python', 'Ruby', 'PHP', 'C++', 'Go', 'C#', 'C']
+LANGUAGES = ['JavaScript', 'Java', 'Python', 'Ruby', 'PHP', 'C++', 'Go', 'C#', 'C']
 
 
 def predict_rub_salary_hh(vac):
@@ -42,7 +42,7 @@ def predict_rub_salary_sj(super_vac):
 
 def sj_salaries_by_lang(secret_key):
     count_vacancies = {}
-    for lang in languages:
+    for lang in LANGUAGES:
         data = []
         vac_found = 0
         vac_processed = 0
@@ -83,7 +83,7 @@ def sj_salaries_by_lang(secret_key):
 
 def hh_salaries_by_lang():
     count_vacancies = {}
-    for lang in languages:
+    for lang in LANGUAGES:
         data = []
         vac_found = 0
         for page in count(0):
