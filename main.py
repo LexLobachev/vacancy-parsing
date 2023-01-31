@@ -13,11 +13,11 @@ def salary_by_condition(salary_currency, salary_from, salary_to):
     average_salary = None
     if salary_currency != 'RUR' or salary_currency != 'rub':
         return average_salary
-    elif (salary_from is None or salary_from == 0) and (salary_to is None and salary_to == 0):
+    elif (not salary_from or salary_from is None) and (not salary_to or salary_to is None):
         return average_salary
-    elif salary_from is None or salary_from == 0:
+    elif not salary_from or salary_from is None:
         average_salary = salary_to * 0.8
-    elif salary_to is None or salary_to == 0:
+    elif not salary_to or salary_to is None:
         average_salary = salary_from * 1.2
     else:
         average_salary = (salary_to - salary_from)//2.0
