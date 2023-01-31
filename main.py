@@ -43,7 +43,7 @@ def predict_rub_salary_sj(super_vac):
 def sj_salaries_by_lang(secret_key):
     count_vacancies = {}
     for lang in LANGUAGES:
-        data = []
+        vacancies = []
         vac_found = 0
         vac_processed = 0
         total_salary = 0
@@ -60,12 +60,12 @@ def sj_salaries_by_lang(secret_key):
 
             page_payload = page_response.json()
             vac_found = page_payload['total']
-            data += page_payload['objects']
+            vacancies += page_payload['objects']
             time.sleep(0.25)
             if not page_payload['more']:
                 break
 
-        for vacancy in data:
+        for vacancy in vacancies:
             if predict_rub_salary_sj(vacancy) is not None:
                 total_salary += predict_rub_salary_sj(vacancy)
                 vac_processed += 1
@@ -84,7 +84,7 @@ def sj_salaries_by_lang(secret_key):
 def hh_salaries_by_lang():
     count_vacancies = {}
     for lang in LANGUAGES:
-        data = []
+        vacancies = []
         vac_found = 0
         for page in count(0):
             params = {
@@ -101,13 +101,13 @@ def hh_salaries_by_lang():
             if page >= page_payload['pages']:
                 break
 
-            data += page_payload['items']
+            vacancies += page_payload['items']
             time.sleep(0.25)
 
         if vac_found > 100:
             vac_processed = 0
             total_salary = 0
-            for vacancy in data:
+            for vacancy in vacancies:
                 if predict_rub_salary_hh(vacancy) is not None:
                     vac_processed += 1
                     total_salary += predict_rub_salary_hh(vacancy)
@@ -120,8 +120,8 @@ def hh_salaries_by_lang():
     return count_vacancies
 
 
-def draw_table(vacancies_data, header):
-    salaries = [
+def draw_table(vacancies_statistics, header):
+    salary_statistics = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -129,9 +129,9 @@ def draw_table(vacancies_data, header):
             'Средняя зарплата'
         ]
     ]
-    for language in vacancies_data.keys():
-        language_salary = vacancies_data[language]
-        salaries.append(
+    for language in vacancies_statistics.keys():
+        language_salary = vacancies_statistics[language]
+        salary_statistics.append(
             [
                 language,
                 language_salary['vacancies_found'],
@@ -139,7 +139,7 @@ def draw_table(vacancies_data, header):
                 language_salary['average_salary']
             ]
         )
-    table = AsciiTable(salaries, header)
+    table = AsciiTable(salary_statistics, header)
     print(table.table)
 
 
