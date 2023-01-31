@@ -38,8 +38,9 @@ def predict_rub_salary_sj(super_vac):
     return salary_by_condition(sj_salary_currency, sj_salary_from, sj_salary_to)
 
 
-def get_sj_salaries_by_lang(secret_key):
+def get_sj_salaries_by_lang(secret_key, town=4):
     vacancies_statistic = {}
+    sleep_time = 0.25
     for lang in LANGUAGES:
         vacancies = []
         vacancies_found = 0
@@ -49,7 +50,7 @@ def get_sj_salaries_by_lang(secret_key):
             url = 'https://api.superjob.ru/2.0/vacancies/'
             params = {
                 'keyword': lang,
-                'town': 4,
+                'town': town,
                 'page': page,
                 'app_key': secret_key
             }
@@ -59,7 +60,7 @@ def get_sj_salaries_by_lang(secret_key):
             page_payload = page_response.json()
             vacancies_found = page_payload['total']
             vacancies += page_payload['objects']
-            time.sleep(0.25)
+            time.sleep(sleep_time)
             if not page_payload['more']:
                 break
 
@@ -79,7 +80,9 @@ def get_sj_salaries_by_lang(secret_key):
     return vacancies_statistic
 
 
-def get_hh_salaries_by_lang():
+def get_hh_salaries_by_lang(area=1, search_period=30, per_page=100):
+    sleep_time = 0.25
+    vacancy_limit = 100
     vacancies_statistic = {}
     for lang in LANGUAGES:
         vacancies = []
@@ -87,9 +90,9 @@ def get_hh_salaries_by_lang():
         for page in count(0):
             params = {
                 'text': f'NAME:Программист {lang}',
-                'area': 1,
-                'search_period': 30,
-                'per_page': 100
+                'area': area,
+                'search_period': search_period,
+                'per_page': per_page
             }
             page_response = requests.get('https://api.hh.ru/vacancies', params)
             page_response.raise_for_status()
@@ -100,9 +103,9 @@ def get_hh_salaries_by_lang():
                 break
 
             vacancies += page_payload['items']
-            time.sleep(0.25)
+            time.sleep(sleep_time)
 
-        if vacancies_found > 100:
+        if vacancies_found > vacancy_limit:
             vacancies_processed = 0
             total_salary = 0
             for vacancy in vacancies:
