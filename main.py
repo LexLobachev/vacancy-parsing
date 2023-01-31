@@ -65,8 +65,9 @@ def get_sj_salaries_by_lang(secret_key, town=4):
                 break
 
         for vacancy in vacancies:
-            if predict_rub_salary_sj(vacancy):
-                total_salary += predict_rub_salary_sj(vacancy)
+            predicted_salary = predict_rub_salary_sj(vacancy)
+            if predicted_salary:
+                total_salary += predicted_salary
                 vacancies_processed += 1
         if vacancies_processed != 0:
             average_salary = total_salary // vacancies_processed
@@ -109,9 +110,10 @@ def get_hh_salaries_by_lang(area=1, search_period=30, per_page=100):
             vacancies_processed = 0
             total_salary = 0
             for vacancy in vacancies:
-                if predict_rub_salary_hh(vacancy) is not None:
+                predicted_salary = predict_rub_salary_hh(vacancy)
+                if predicted_salary is not None:
                     vacancies_processed += 1
-                    total_salary += predict_rub_salary_hh(vacancy)
+                    total_salary += predicted_salary
             average_salary = total_salary // vacancies_processed
             vacancies_statistic[lang] = {
                 "vacancies_found": vacancies_found,
