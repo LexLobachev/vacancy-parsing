@@ -13,11 +13,11 @@ def salary_by_condition(salary_currency, salary_from, salary_to):
     average_salary = None
     if salary_currency != 'RUR' or salary_currency != 'rub':
         return average_salary
-    elif (not salary_from or salary_from is None) and (not salary_to or salary_to is None):
+    elif not salary_from and not salary_to:
         return average_salary
-    elif not salary_from or salary_from is None:
+    elif not salary_from:
         average_salary = salary_to * 0.8
-    elif not salary_to or salary_to is None:
+    elif not salary_to:
         average_salary = salary_from * 1.2
     else:
         average_salary = (salary_to - salary_from)//2.0
@@ -64,7 +64,7 @@ def sj_salaries_by_lang(secret_key):
                 break
 
         for vacancy in vacancies:
-            if predict_rub_salary_sj(vacancy) is not None:
+            if predict_rub_salary_sj(vacancy):
                 total_salary += predict_rub_salary_sj(vacancy)
                 vac_processed += 1
         if vac_processed != 0:
