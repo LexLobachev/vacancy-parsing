@@ -38,7 +38,7 @@ def predict_rub_salary_sj(super_vac):
     return salary_by_condition(sj_salary_currency, sj_salary_from, sj_salary_to)
 
 
-def sj_salaries_by_lang(secret_key):
+def get_sj_salaries_by_lang(secret_key):
     count_vacancies = {}
     for lang in LANGUAGES:
         vacancies = []
@@ -79,7 +79,7 @@ def sj_salaries_by_lang(secret_key):
     return count_vacancies
 
 
-def hh_salaries_by_lang():
+def get_hh_salaries_by_lang():
     count_vacancies = {}
     for lang in LANGUAGES:
         vacancies = []
@@ -144,5 +144,5 @@ def draw_table(vacancies_statistics, header):
 if __name__ == '__main__':
     load_dotenv()
     sj_secret_key = os.environ.get('SJ_SECRET_KEY')
-    print(draw_table(hh_salaries_by_lang(), 'HeadHunter Moscow'))
-    print(draw_table(sj_salaries_by_lang(sj_secret_key), 'SuperJob Moscow'))
+    print(draw_table(get_hh_salaries_by_lang(), 'HeadHunter Moscow'))
+    print(draw_table(get_sj_salaries_by_lang(sj_secret_key), 'SuperJob Moscow'))
