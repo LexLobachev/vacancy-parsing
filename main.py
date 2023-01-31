@@ -114,7 +114,10 @@ def get_hh_salaries_by_lang(area=1, search_period=30, per_page=100):
                 if predicted_salary is not None:
                     vacancies_processed += 1
                     total_salary += predicted_salary
-            average_salary = total_salary // vacancies_processed
+            if vacancies_processed != 0:
+                average_salary = total_salary // vacancies_processed
+            else:
+                average_salary = 0
             vacancies_statistic[lang] = {
                 "vacancies_found": vacancies_found,
                 "vacancies_processed": int(vacancies_processed),
