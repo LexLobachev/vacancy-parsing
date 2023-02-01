@@ -106,23 +106,24 @@ def get_hh_salaries_by_lang(area=1, search_period=30, per_page=100):
             vacancies += page_payload['items']
             time.sleep(sleep_time)
 
-        if vacancies_found > vacancy_limit:
-            vacancies_processed = 0
-            total_salary = 0
-            for vacancy in vacancies:
-                predicted_salary = predict_rub_salary_hh(vacancy)
-                if predicted_salary is not None:
-                    vacancies_processed += 1
-                    total_salary += predicted_salary
-            if vacancies_processed != 0:
-                average_salary = total_salary // vacancies_processed
-            else:
-                average_salary = 0
-            vacancies_statistic[lang] = {
-                "vacancies_found": vacancies_found,
-                "vacancies_processed": int(vacancies_processed),
-                "average_salary": int(average_salary)
-            }
+        if not vacancies_found > vacancy_limit:
+            continue
+        vacancies_processed = 0
+        total_salary = 0
+        average_salary = 0
+        for vacancy in vacancies:
+            predicted_salary = predict_rub_salary_hh(vacancy)
+            if not predicted_salary:
+                continue
+            vacancies_processed += 1
+            total_salary += predicted_salary
+        if vacancies_processed:
+            average_salary = total_salary // vacancies_processed
+        vacancies_statistic[lang] = {
+            "vacancies_found": vacancies_found,
+            "vacancies_processed": int(vacancies_processed),
+            "average_salary": int(average_salary)
+        }
     return vacancies_statistic
 
 
