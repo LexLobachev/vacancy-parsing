@@ -9,7 +9,7 @@ import os
 LANGUAGES = ['JavaScript', 'Java', 'Python', 'Ruby', 'PHP', 'C++', 'Go', 'C#', 'C']
 
 
-def salary_by_condition(salary_currency, salary_from, salary_to):
+def get_salary_by_condition(salary_currency, salary_from, salary_to):
     average_salary = None
     if salary_currency != 'RUR' or salary_currency != 'rub':
         return average_salary
@@ -28,14 +28,14 @@ def predict_rub_salary_hh(vac):
     hh_salary_currency = vac['salary']['currency']
     hh_salary_from = vac['salary']['from']
     hh_salary_to = vac['salary']['to']
-    return salary_by_condition(hh_salary_currency, hh_salary_from, hh_salary_to)
+    return get_salary_by_condition(hh_salary_currency, hh_salary_from, hh_salary_to)
 
 
 def predict_rub_salary_sj(super_vac):
     sj_salary_currency = super_vac['currency']
     sj_salary_from = super_vac['payment_from']
     sj_salary_to = super_vac['payment_to']
-    return salary_by_condition(sj_salary_currency, sj_salary_from, sj_salary_to)
+    return get_salary_by_condition(sj_salary_currency, sj_salary_from, sj_salary_to)
 
 
 def get_sj_salaries_by_lang(secret_key, town=4):
