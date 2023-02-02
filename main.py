@@ -69,7 +69,7 @@ def get_sj_salaries_by_lang(secret_key, town=4):
             if predicted_salary:
                 total_salary += predicted_salary
                 vacancies_processed += 1
-        if vacancies_processed != 0:
+        if vacancies_processed:
             average_salary = total_salary // vacancies_processed
         else:
             average_salary = 0
